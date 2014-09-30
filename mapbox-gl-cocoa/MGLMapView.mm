@@ -250,7 +250,7 @@ MBGLView *mbglView = nullptr;
 
     // set initial position
     //
-    mbglMap->setLonLatZoom(0, 0, mbglMap->getMinZoom());
+    mbglMap->setLatLngZoom({ 0, 0 }, mbglMap->getMinZoom());
 
     // setup change delegate queue
     //
@@ -707,7 +707,7 @@ MBGLView *mbglView = nullptr;
 {
     double duration = (animated ? 0.3 : 0);
 
-    mbglMap->setLonLat(coordinate.longitude, coordinate.latitude, duration);
+    mbglMap->setLatLng({ coordinate.latitude, coordinate.longitude }, duration);
 }
 
 - (void)setCenterCoordinate:(CLLocationCoordinate2D)centerCoordinate
@@ -717,17 +717,16 @@ MBGLView *mbglView = nullptr;
 
 - (CLLocationCoordinate2D)centerCoordinate
 {
-    double lon, lat;
-    mbglMap->getLonLat(lon, lat);
+    mbgl::LatLng latLng = mbglMap->getLatLng();
 
-    return CLLocationCoordinate2DMake(lat, lon);
+    return CLLocationCoordinate2DMake(latLng.latitude, latLng.longitude);
 }
 
 - (void)setCenterCoordinate:(CLLocationCoordinate2D)centerCoordinate zoomLevel:(double)zoomLevel animated:(BOOL)animated
 {
     double duration = (animated ? 0.3 : 0);
 
-    mbglMap->setLonLatZoom(centerCoordinate.longitude, centerCoordinate.latitude, zoomLevel, duration);
+    mbglMap->setLatLngZoom({ centerCoordinate.latitude, centerCoordinate.longitude }, zoomLevel, duration);
 }
 
 - (double)zoomLevel
