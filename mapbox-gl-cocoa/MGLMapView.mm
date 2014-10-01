@@ -780,6 +780,30 @@ MBGLView *mbglView = nullptr;
     [self setDirection:direction animated:NO];
 }
 
+- (CLLocationCoordinate2D)convertPoint:(CGPoint)point toCoordinateFromView:(UIView *)view
+{
+    // FIXME: convert to other views
+
+    mbgl::LatLng latLng = mbglMap->latLngForOffset(point.x, point.y);
+
+    return CLLocationCoordinate2DMake(latLng.latitude, latLng.longitude);
+}
+
+- (CGPoint)convertCoordinate:(CLLocationCoordinate2D)coordinate toPointToView:(UIView *)view
+{
+    // FIXME: convert to other views
+
+    double x, y;
+
+    mbglMap->offsetForLatLng({ coordinate.latitude, coordinate.longitude }, x, y);
+
+    // flip y coordinate for iOS view origin in top left
+    //
+    y = self.bounds.size.height - y;
+
+    return CGPointMake(x, y);
+}
+
 #pragma mark - Styling
 
 - (NSDictionary *)getRawStyle
