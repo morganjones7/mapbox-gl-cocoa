@@ -782,17 +782,15 @@ MBGLView *mbglView = nullptr;
 
 - (CLLocationCoordinate2D)convertPoint:(CGPoint)point toCoordinateFromView:(UIView *)view
 {
-    // FIXME: convert to other views
+    CGPoint convertedPoint = [self convertPoint:point fromView:view];
 
-    mbgl::LatLng latLng = mbglMap->latLngForOffset(point.x, point.y);
+    mbgl::LatLng latLng = mbglMap->latLngForOffset(convertedPoint.x, convertedPoint.y);
 
     return CLLocationCoordinate2DMake(latLng.latitude, latLng.longitude);
 }
 
 - (CGPoint)convertCoordinate:(CLLocationCoordinate2D)coordinate toPointToView:(UIView *)view
 {
-    // FIXME: convert to other views
-
     double x, y;
 
     mbglMap->offsetForLatLng({ coordinate.latitude, coordinate.longitude }, x, y);
@@ -801,7 +799,7 @@ MBGLView *mbglView = nullptr;
     //
     y = self.bounds.size.height - y;
 
-    return CGPointMake(x, y);
+    return [self convertPoint:CGPointMake(x, y) toView:view];
 }
 
 #pragma mark - Styling
