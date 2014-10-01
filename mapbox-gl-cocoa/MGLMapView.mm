@@ -73,6 +73,8 @@ class MBGLView;
 mbgl::Map *mbglMap = nullptr;
 MBGLView *mbglView = nullptr;
 
+#pragma mark - Setup & Teardown
+
 - (instancetype)initWithFrame:(CGRect)frame styleJSON:(NSString *)styleJSON accessToken:(NSString *)accessToken
 {
     self = [super initWithFrame:frame];
@@ -284,6 +286,8 @@ MBGLView *mbglView = nullptr;
     }
 }
 
+#pragma mark - Layout
+
 - (void)setFrame:(CGRect)frame
 {
     [super setFrame:frame];
@@ -409,6 +413,8 @@ MBGLView *mbglView = nullptr;
     [super layoutSubviews];
 }
 
+#pragma mark - Lifecycle
+
 + (CGFloat)degreesToRadians:(CGFloat)degrees
 {
     return degrees * M_PI / 180;
@@ -435,6 +441,19 @@ MBGLView *mbglView = nullptr;
 
     mbglMap->start();
 }
+
+- (void)tintColorDidChange
+{
+    for (UIView *subview in self.subviews)
+    {
+        if ([subview respondsToSelector:@selector(setTintColor:)])
+        {
+            subview.tintColor = self.tintColor;
+        }
+    }
+}
+
+#pragma mark - Gestures
 
 - (void)handleCompassTapGesture:(id)sender
 {
@@ -640,16 +659,7 @@ MBGLView *mbglView = nullptr;
     return ([validSimultaneousGestures containsObject:gestureRecognizer] && [validSimultaneousGestures containsObject:otherGestureRecognizer]);
 }
 
-- (void)tintColorDidChange
-{
-    for (UIView *subview in self.subviews)
-    {
-        if ([subview respondsToSelector:@selector(setTintColor:)])
-        {
-            subview.tintColor = self.tintColor;
-        }
-    }
-}
+#pragma mark - Properties
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-parameter"
@@ -702,6 +712,8 @@ MBGLView *mbglView = nullptr;
 {
     mbglMap->toggleDebug();
 }
+
+#pragma mark - Geography
 
 - (void)setCenterCoordinate:(CLLocationCoordinate2D)coordinate animated:(BOOL)animated
 {
@@ -767,6 +779,8 @@ MBGLView *mbglView = nullptr;
 {
     [self setDirection:direction animated:NO];
 }
+
+#pragma mark - Styling
 
 - (NSDictionary *)getRawStyle
 {
@@ -1215,6 +1229,8 @@ MBGLView *mbglView = nullptr;
 
     return MGLStyleAllowedTypes;
 }
+
+#pragma mark - Utility
 
 - (void)unsuspendRegionChangeDelegateQueue
 {
