@@ -252,7 +252,7 @@ MBGLView *mbglView = nullptr;
 
     // set initial position
     //
-    mbglMap->setLatLngZoom({ 0, 0 }, mbglMap->getMinZoom());
+    mbglMap->setLatLngZoom(MGLLatLngMake(0, 0), mbglMap->getMinZoom());
 
     // setup change delegate queue
     //
@@ -719,7 +719,7 @@ MBGLView *mbglView = nullptr;
 {
     double duration = (animated ? 0.3 : 0);
 
-    mbglMap->setLatLng({ coordinate.latitude, coordinate.longitude }, duration);
+    mbglMap->setLatLng(MGLLatLngMakeWithCoordinate(coordinate), duration);
 }
 
 - (void)setCenterCoordinate:(CLLocationCoordinate2D)centerCoordinate
@@ -738,7 +738,7 @@ MBGLView *mbglView = nullptr;
 {
     double duration = (animated ? 0.3 : 0);
 
-    mbglMap->setLatLngZoom({ centerCoordinate.latitude, centerCoordinate.longitude }, zoomLevel, duration);
+    mbglMap->setLatLngZoom(MGLLatLngMakeWithCoordinate(centerCoordinate), zoomLevel, duration);
 }
 
 - (double)zoomLevel
@@ -793,7 +793,7 @@ MBGLView *mbglView = nullptr;
 {
     double x, y;
 
-    mbglMap->offsetForLatLng({ coordinate.latitude, coordinate.longitude }, x, y);
+    mbglMap->offsetForLatLng(MGLLatLngMakeWithCoordinate(coordinate), x, y);
 
     // flip y coordinate for iOS view origin in top left
     //
@@ -1386,6 +1386,21 @@ MBGLView *mbglView = nullptr;
         }
                          completion:nil];
     }
+}
+
+mbgl::LatLng MGLLatLngMake(const double lat, const double lon)
+{
+    return MGLLatLngMakeWithCoordinate(CLLocationCoordinate2DMake(lat, lon));
+}
+
+mbgl::LatLng MGLLatLngMakeWithCoordinate(CLLocationCoordinate2D coordinate)
+{
+    mbgl::LatLng latLng;
+
+    latLng.latitude  = coordinate.latitude;
+    latLng.longitude = coordinate.longitude;
+
+    return latLng;
 }
 
 + (UIImage *)resourceImageNamed:(NSString *)imageName
