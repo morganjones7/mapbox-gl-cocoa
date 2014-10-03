@@ -802,6 +802,11 @@ MBGLView *mbglView = nullptr;
     return [self convertPoint:CGPointMake(x, y) toView:view];
 }
 
+- (CLLocationDistance)metersPerPixelAtLatitude:(CLLocationDegrees)latitude
+{
+    return mbglMap->getMetersPerPixelAtLatitude(latitude, self.zoomLevel);
+}
+
 #pragma mark - Styling
 
 - (NSDictionary *)getRawStyle

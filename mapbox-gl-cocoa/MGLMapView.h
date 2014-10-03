@@ -131,6 +131,17 @@
 /** Resets the map rotation to a northern heading. */
 - (void)resetNorth;
 
+#pragma mark - Converting Map Coordinates
+
+// TODO
+- (CLLocationCoordinate2D)convertPoint:(CGPoint)point toCoordinateFromView:(UIView *)view;
+
+// TODO
+- (CGPoint)convertCoordinate:(CLLocationCoordinate2D)coordinate toPointToView:(UIView *)view;
+
+// TODO
+- (CLLocationDistance)metersPerPixelAtLatitude:(CLLocationDegrees)latitude;
+
 #pragma mark - Styling the Map
 
 /** @name Styling the Map */
