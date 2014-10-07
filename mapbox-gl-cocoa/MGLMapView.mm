@@ -784,6 +784,10 @@ MBGLView *mbglView = nullptr;
 {
     CGPoint convertedPoint = [self convertPoint:point fromView:view];
 
+    // flip y coordinate for iOS view origin top left
+    //
+    convertedPoint.y = self.bounds.size.height - convertedPoint.y;
+
     mbgl::LatLng latLng = mbglMap->latLngForOffset(convertedPoint.x, convertedPoint.y);
 
     return CLLocationCoordinate2DMake(latLng.latitude, latLng.longitude);
