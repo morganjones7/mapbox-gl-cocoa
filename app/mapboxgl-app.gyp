@@ -20,8 +20,10 @@
             "../../../common/settings_nsuserdefaults.hpp",
             "../../../common/settings_nsuserdefaults.mm",
             "../../../common/platform_nsstring.mm",
-            "../../../common/foundation_request.h",
-            "../../../common/foundation_request.mm",
+            "../../../common/Reachability.h",
+            "../../../common/Reachability.m",
+            "../../../common/http_request_baton_cocoa.mm",
+            "../../../common/ios.mm",
             "../../../common/nslog_log.hpp",
             "../../../common/nslog_log.mm",
         ],
@@ -37,7 +39,8 @@
             '$(SDKROOT)/System/Library/Frameworks/CoreLocation.framework',
             '$(SDKROOT)/System/Library/Frameworks/GLKit.framework',
             '$(SDKROOT)/System/Library/Frameworks/OpenGLES.framework',
-            '$(SDKROOT)/System/Library/Frameworks/UIKit.framework'
+            '$(SDKROOT)/System/Library/Frameworks/UIKit.framework',
+            '$(SDKROOT)/System/Library/Frameworks/SystemConfiguration.framework',
           ],
         },
         'xcode_settings': {

@@ -1,6 +1,5 @@
 #import "MGLMapView.h"
 
-#import "foundation_request.h"
 #import "nslog_log.hpp"
 
 #import <GLKit/GLKit.h>
@@ -8,6 +7,7 @@
 
 #include <mbgl/mbgl.hpp>
 #include <mbgl/platform/platform.hpp>
+#include "Reachability.h"
 
 #import "MGLTypes.h"
 #import "MGLStyleFunctionValue.h"
@@ -122,8 +122,6 @@ MBGLView *mbglView = nullptr;
 
 - (void)setStyleJSON:(NSString *)styleJSON
 {
-    mbglMap->stop();
-
     if ( ! styleJSON)
     {
         if ( ! [@(mbglMap->getAccessToken().c_str()) length])
@@ -179,6 +177,15 @@ MBGLView *mbglView = nullptr;
     mbglView = new MBGLView(self);
     mbglMap = new mbgl::Map(*mbglView);
     mbglMap->resize(self.bounds.size.width, self.bounds.size.height, _glView.contentScaleFactor, _glView.drawableWidth, _glView.drawableHeight);
+
+    // Notify map object when network reachability status changes.
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reachabilityChanged:)
+                                                 name:kReachabilityChangedNotification
+                                               object:nil];
+
+    Reachability* reachability = [Reachability reachabilityForInternetConnection];
+    [reachability startNotifier];
 
     // setup logo bug
     //
@@ -260,6 +267,12 @@ MBGLView *mbglView = nullptr;
     _regionChangeDelegateQueue.maxConcurrentOperationCount = 1;
 
     return YES;
+}
+
+-(void)reachabilityChanged:(NSNotification*)notification
+{
+    Reachability *reachability = [notification object];
+    mbglMap->setReachability([reachability isReachable]);
 }
 
 - (void)dealloc
@@ -1454,6 +1467,12 @@ class MBGLView : public mbgl::View
     public:
         MBGLView(MGLMapView *nativeView) : nativeView(nativeView) {}
         virtual ~MBGLView() {}
+
+
+    void notify()
+    {
+        // no-op
+    }
 
     void notify_map_change(mbgl::MapChange change, mbgl::timestamp delay = 0)
     {
